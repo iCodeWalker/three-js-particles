@@ -23,16 +23,30 @@ const textureLoader = new THREE.TextureLoader();
  * Create a Particle
  */
 
-// Geometry
-const particleGeometry = new THREE.SphereGeometry(1, 32, 32);
-// Material
+// ###### Geometry ######
+// const particleGeometry = new THREE.SphereGeometry(1, 32, 32);
+// Create a BufferGeometry()
+const particleGeometry = new THREE.BufferGeometry();
+const count = 5000;
+const positions = new Float32Array(count * 3);
+
+for (let i = 0; i < count * 3; i++) {
+  positions[i] = (Math.random() - 0.5) * 10;
+}
+
+particleGeometry.setAttribute(
+  "position",
+  new THREE.BufferAttribute(positions, 3)
+);
+
+// ####### Material #######
 const particleMaterial = new THREE.PointsMaterial();
 // change 'size' property to control all particles size and
 // the 'sizeAttenuation' to specify if distant particle should be smaller than the closer one
-particleMaterial.size = 0.02;
+particleMaterial.size = 0.1;
 particleMaterial.sizeAttenuation = true;
 
-// Create Points
+// ####### Create Points #######
 // Instantiate a Points class like we do for Mesh
 
 const particles = new THREE.Points(particleGeometry, particleMaterial);
