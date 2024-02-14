@@ -18,6 +18,7 @@ const scene = new THREE.Scene();
  * Textures
  */
 const textureLoader = new THREE.TextureLoader();
+const particleTexture = textureLoader.load("/textures/particles/2.png");
 
 /**
  * Create a Particle
@@ -45,6 +46,19 @@ const particleMaterial = new THREE.PointsMaterial();
 // the 'sizeAttenuation' to specify if distant particle should be smaller than the closer one
 particleMaterial.size = 0.1;
 particleMaterial.sizeAttenuation = true;
+
+// ###### color, map and alphaMap ######
+particleMaterial.color = new THREE.Color("#ff88cc");
+// using 'map' property to put a texture on those particles
+// particleMaterial.map = particleTexture;
+// activate the transparency and use the texture on 'alphaMap' property
+particleMaterial.transparent = true;
+particleMaterial.alphaMap = particleTexture;
+
+// The edges of the particles are still visible, That is because the particles are drawn in the same order
+// as they are created, and Webgl dosen't really know which one is in front of the other.
+
+// There are multiple of ways of fixing it.
 
 // ####### Create Points #######
 // Instantiate a Points class like we do for Mesh
