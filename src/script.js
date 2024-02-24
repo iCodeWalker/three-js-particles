@@ -30,15 +30,20 @@ const particleTexture = textureLoader.load("/textures/particles/2.png");
 const particleGeometry = new THREE.BufferGeometry();
 const count = 5000;
 const positions = new Float32Array(count * 3);
+// ##### Adding different color to particles #####
+const colors = new Float32Array(count * 3);
 
 for (let i = 0; i < count * 3; i++) {
   positions[i] = (Math.random() - 0.5) * 10;
+  colors[i] = Math.random();
 }
 
 particleGeometry.setAttribute(
   "position",
   new THREE.BufferAttribute(positions, 3)
 );
+
+particleGeometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
 // ####### Material #######
 const particleMaterial = new THREE.PointsMaterial();
@@ -102,12 +107,12 @@ particleMaterial.alphaMap = particleTexture;
 
 particleMaterial.depthWrite = false;
 
-const cube = new THREE.Mesh(
-  new THREE.BoxGeometry(),
-  new THREE.MeshBasicMaterial()
-);
+// const cube = new THREE.Mesh(
+//   new THREE.BoxGeometry(),
+//   new THREE.MeshBasicMaterial()
+// );
 
-scene.add(cube);
+// scene.add(cube);
 
 // ######## Using Blending ########
 
@@ -115,7 +120,13 @@ scene.add(cube);
 // With 'blending' property, we can tell the webGL to add the color of the pixel to the color of the other pixel
 // already drawn.
 
-particleMaterial.blending = THREE.AdditiveBlending();
+particleMaterial.blending = THREE.AdditiveBlending;
+
+// For adding different color to every particle.
+particleMaterial.vertexColors = true;
+// The main color of the material still affects these vertex colors. To see the effect of only vertexColor we
+// have to remove the main color
+
 // ####### Create Points #######
 // Instantiate a Points class like we do for Mesh
 
