@@ -44,13 +44,21 @@ particleGeometry.setAttribute(
 const particleMaterial = new THREE.PointsMaterial();
 // change 'size' property to control all particles size and
 // the 'sizeAttenuation' to specify if distant particle should be smaller than the closer one
+// 'sizeAttenuation' is used for setting the perspective
 particleMaterial.size = 0.1;
 particleMaterial.sizeAttenuation = true;
 
 // ###### color, map and alphaMap ######
+// change color of particles using 'color' property.
+// After instantiation we have to use Three.Color class to change the color
 particleMaterial.color = new THREE.Color("#ff88cc");
 // using 'map' property to put a texture on those particles
+// #### using only 'map' property will have affect of hiding the particles behind it when we zoom it. As it will
+// be a opaque texture.
+
 // particleMaterial.map = particleTexture;
+
+// ###### For viewing particles behind the particle we have to activate transparency.
 // activate the transparency and use the texture on 'alphaMap' property
 particleMaterial.transparent = true;
 particleMaterial.alphaMap = particleTexture;
@@ -60,6 +68,54 @@ particleMaterial.alphaMap = particleTexture;
 
 // There are multiple of ways of fixing it.
 
+// ####### Using Alpha Test #######
+// The alphaTest is a value between 0 and 1 that enable the webGL to know when not to render the pixel
+// according to that pixel's transparency.
+
+// Normally, The black part of the texture will be rendered but with the alpha 0.
+// With alpha test we will tell the GPU to not even render this black part.
+
+// By default, the value is 0, meaning that the pixel will be rendered anyway.
+
+// particleMaterial.alphaTest = 0.002;
+
+// ####### Using Depth Test #######
+// When drawing, the WebGL tests if what's being drawn is closer than what's already drawn.
+// This is called depth testing and can be deactivated with 'depthTest'
+
+// particleMaterial.depthTest = false;
+
+// If we add other it mesh to the scene it will create problems for other geometries for
+
+// const cube = new THREE.Mesh(
+//   new THREE.BoxGeometry(),
+//   new THREE.MeshBasicMaterial()
+// );
+
+// scene.add(cube);
+
+// ######## Using Depth Write #######
+
+// The depth of what's being drawn is stored in what we call a depth buffer.
+// Instead of not testing if the particle is closer than what's in this depth buffer,
+// we can tell the webGL not to write particles in that depth buffer with 'depthWrite'
+
+particleMaterial.depthWrite = false;
+
+const cube = new THREE.Mesh(
+  new THREE.BoxGeometry(),
+  new THREE.MeshBasicMaterial()
+);
+
+scene.add(cube);
+
+// ######## Using Blending ########
+
+// The WebGL currently draws pixels one on top of the other pixel.
+// With 'blending' property, we can tell the webGL to add the color of the pixel to the color of the other pixel
+// already drawn.
+
+particleMaterial.blending = THREE.AdditiveBlending();
 // ####### Create Points #######
 // Instantiate a Points class like we do for Mesh
 
