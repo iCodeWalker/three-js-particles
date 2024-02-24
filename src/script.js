@@ -188,6 +188,33 @@ const clock = new THREE.Clock();
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
 
+  // animating particles
+
+  // Using this we can animate the whole Mesh
+  // particles.rotation.y = elapsedTime * 0.2;
+  // particles.position.y = -(elapsedTime * 0.2);
+
+  // We need more control so that we can animate each particle.
+  // By changing the attributes
+
+  // We can update each vertex seperately in "particleGeometry.attributes.position.array" as this array contain
+  // position of particles.
+
+  for (let i = 0; i < count; i++) {
+    const i3 = i * 3;
+
+    // to access the y-coordinate we do i3+1;
+    // to access the z-coordinate we do i3+2;
+    const x = particleGeometry.attributes.position.array[i3];
+    particleGeometry.attributes.position.array[i3 + 1] = Math.sin(
+      elapsedTime + x
+    );
+    // Nothing moves because Three.js needs to be notified when a geometry attribute changes
+    // set the 'needsUpdate' to true on position attribute
+    particleGeometry.attributes.position.needsUpdate = true;
+  }
+  // We should avoid this technic because updating the whole attribute on each frame is bad for performance
+
   // Update controls
   controls.update();
 
